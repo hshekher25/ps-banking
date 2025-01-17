@@ -79,7 +79,7 @@ local function addMoney(accountName, amount, reason)
 			"UPDATE ps_banking_accounts SET balance = balance + ? WHERE holder = ?",
 			{ amount, accountName }
 		)
-		logTransaction(getPlayerIdentifier(account[1].owner), reason, accountName, amount, true)
+		logTransaction(json.decode(account[1].owner).identifier, reason, accountName, amount, true)
 		return true
 	end
 	return false
@@ -93,7 +93,7 @@ local function removeMoney(accountName, amount, reason)
 			"UPDATE ps_banking_accounts SET balance = balance - ? WHERE holder = ?",
 			{ amount, accountName }
 		)
-		logTransaction(getPlayerIdentifier(account[1].owner), reason, accountName, amount, false)
+		logTransaction(json.decode(account[1].owner).identifier, reason, accountName, amount, false)
 		return true
 	end
 	return false
