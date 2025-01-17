@@ -689,18 +689,22 @@ lib.callback.register("ps-banking:server:playerGroupInfo", function(source, data
 
     local PlayerGroup = isJob and PlayerJob or PlayerGang
 
-    if PlayerGroup.name == data.name then
+    -- Handle nil PlayerGroup safely
+    if PlayerGroup and PlayerGroup.name == data.name then
         return
     end
 
-    if PlayerGroup.name ~= isJob and "unemployed" or "none" then
-        removeUserFromAccountByHolder(PlayerJob.name, xPlayer.PlayerData.citizenid)
+    -- Remove user from previous account if it exists and is not "unemployed" or "none"
+    if PlayerGroup and PlayerGroup.name ~= "unemployed" and PlayerGroup.name ~= "none" then
+        removeUserFromAccountByHolder(PlayerGroup.name, xPlayer.PlayerData.citizenid)
     end
 
-    if data.name ~= isJob and "unemployed" or "none" then
+    -- Add user to the new account if it's not "unemployed" or "none"
+    if data.name ~= "unemployed" and data.name ~= "none" then
         addUserToAccountByHolder(data.name, xPlayer.PlayerData.citizenid)
     end
 
+    -- Update PlayerJob or PlayerGang
     if isJob then
         PlayerJob = data
     else

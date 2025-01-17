@@ -377,6 +377,7 @@ RegisterNetEvent(
     "QBCore:Client:OnPlayerLoaded",
     function()
         local PlayerData = QBCore.Functions.GetPlayerData()
+        print(PlayerData.job)
         lib.callback.await("ps-banking:server:playerGroupInfo", false, PlayerData.job, true)
         lib.callback.await("ps-banking:server:playerGroupInfo", false, PlayerData.gang, false)
     end
