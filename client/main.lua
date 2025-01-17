@@ -361,3 +361,37 @@ RegisterNUICallback("ps-banking:client:getAmountPresets", function(_, cb)
         grid = Config.PresetATM_Amounts.Grid,
     }))
 end)
+
+AddEventHandler('onResourceStart', function(resource)
+   if not resource == GetCurrentResourceName() then return end
+
+   local success = lib.callback.await("ps-banking:server:createSocietyAccount", false)
+   if not success then
+       print("Failed to create society account")
+   else
+       print("Society account created")
+   end
+end)
+
+RegisterNetEvent(
+    "QBCore:Client:OnPlayerLoaded",
+    function()
+        local PlayerData = QBCore.Functions.GetPlayerData()
+        lib.callback.await("ps-banking:server:playerGroupInfo", false, PlayerData.job, true)
+        lib.callback.await("ps-banking:server:playerGroupInfo", false, PlayerData.gang, false)
+    end
+)
+
+RegisterNetEvent(
+    "QBCore:Client:OnJobUpdate",
+    function(data)
+        lib.callback.await("ps-banking:server:playerGroupInfo", false, data, true)
+    end
+)
+
+RegisterNetEvent(
+    "QBCore:Client:OnGangUpdate",
+    function(data)
+        lib.callback.await("ps-banking:server:playerGroupInfo", false, data, false)
+    end
+)
